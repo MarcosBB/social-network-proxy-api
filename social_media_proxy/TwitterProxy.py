@@ -1,10 +1,18 @@
 # from .Proxy import Proxy
 import tweepy
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 class TwitterProxy():
-    def __init__(self, bearer_token):
+    def __init__(self, access_token, access_token_secret):
         self.client = tweepy.Client(
-            bearer_token=bearer_token
+            bearer_token=os.getenv("BEARER_TOKEN"),
+            consumer_key=os.getenv("API_KEY"),
+            consumer_secret=os.getenv("API_KEY_SECRET"),
+            access_token=access_token,
+            access_token_secret=access_token_secret,
         )
     
     def get_me(self):
@@ -20,11 +28,3 @@ class TwitterProxy():
         return self.client.delete_tweet(
             id=id,
         ).data
-    
-    @classmethod
-    def token(consumer_key, consumer_secret):
-        auth = tweepy.OAuth2AppHandler(
-            consumer_key, 
-            consumer_secret,
-        )
-        return {"bearer_token": auth.apply_auth().bearer_token}
